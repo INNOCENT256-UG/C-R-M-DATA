@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Employee Dashboard 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #0b0e14;
+  --bg2: #111520;
+  --bg3: #161c2a;
+  --border: rgba(255,255,255,0.07);
+  --accent: #4f9cf9;
+  --accent2: #29d9a4;
+  --accent3: #f97c4f;
+  --text: #e8ecf4;
+  --text2: #7b8498;
+  --text3: #4a5168;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-display); overflow-x: hidden; }
+
+body { display: grid; grid-template-rows: auto 1fr; min-height: 100vh; }
+
+/* HEADER */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.logo {
+  display: flex; align-items: center; gap: 14px;
+}
+.logo-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
+.logo-text { font-size: 15px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text); }
+.logo-sub { font-size: 11px; font-family: var(--font-mono); color: var(--text2); letter-spacing: .1em; }
+.header-right { display: flex; gap: 24px; align-items: center; }
+.filter-group { display: flex; align-items: center; gap: 8px; }
+.filter-group label { font-size: 11px; font-family: var(--font-mono); color: var(--text3); text-transform: uppercase; letter-spacing: .08em; }
+select {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 12px; padding: 6px 12px;
+  border-radius: 6px; cursor: pointer; outline: none;
+  transition: border-color .2s;
+}
+select:hover, select:focus { border-color: var(--accent); }
+.live-badge {
+  font-family: var(--font-mono); font-size: 11px; color: var(--accent2);
+  border: 1px solid rgba(41,217,164,.25); padding: 5px 12px; border-radius: 20px;
+  display: flex; align-items: center; gap: 6px; letter-spacing: .06em;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: pulse 1.6s infinite; }
+
+/* MAIN LAYOUT */
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  padding: 18px 36px 24px;
+  align-content: start;
+}
+
+/* METRIC CARDS */
+.metric {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px; position: relative; overflow: hidden;
+  transition: border-color .2s, transform .15s;
+  animation: fadeUp .5s ease both;
+}
+.metric:hover { border-color: rgba(79,156,249,.3); transform: translateY(-1px); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.metric:nth-child(1){animation-delay:.05s} .metric:nth-child(2){animation-delay:.1s}
+.metric:nth-child(3){animation-delay:.15s} .metric:nth-child(4){animation-delay:.2s}
+.metric::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: var(--accent-color, var(--accent)); opacity:.7;
+}
+.metric.green { --accent-color: var(--accent2); }
+.metric.orange { --accent-color: var(--accent3); }
+.metric.purple { --accent-color: #b06cf9; }
+.metric-label { font-size: 11px; font-family: var(--font-mono); color: var(--text3); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.metric-val { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1; }
+.metric-sub { font-size: 11px; font-family: var(--font-mono); color: var(--text2); margin-top: 6px; }
+
+/* CHARTS */
+.chart-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px; animation: fadeUp .5s ease both;
+}
+.chart-card.span2 { grid-column: span 2; }
+.chart-card.span4 { grid-column: span 4; }
+.chart-title {
+  font-size: 11px; font-family: var(--font-mono); color: var(--text2);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.chart-title::before { content:''; width:3px; height:14px; background:var(--accent); border-radius:2px; }
+.chart-wrap { position: relative; }
+
+/* SKILLS */
+.skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.skill-name { width: 96px; font-size: 12px; font-family: var(--font-mono); color: var(--text2); flex-shrink: 0; }
+.skill-track { flex: 1; height: 6px; background: rgba(255,255,255,.05); border-radius: 3px; overflow: hidden; }
+.skill-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width .8s cubic-bezier(.4,0,.2,1); }
+.skill-count { font-size: 12px; font-family: var(--font-mono); color: var(--text3); width: 20px; text-align: right; }
+
+/* EMPLOYEE TABLE */
+.emp-table { width: 100%; border-collapse: collapse; }
+.emp-table th {
+  font-size: 10px; font-family: var(--font-mono); color: var(--text3);
+  text-transform: uppercase; letter-spacing: .1em; padding: 0 12px 10px;
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+.emp-table td {
+  font-size: 13px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.03);
+  color: var(--text); transition: background .15s;
+}
+.emp-table tr:hover td { background: rgba(79,156,249,.04); }
+.emp-table tr:last-child td { border-bottom: none; }
+.badge {
+  display: inline-block; font-size: 10px; font-family: var(--font-mono);
+  padding: 3px 8px; border-radius: 4px; letter-spacing: .05em; font-weight: 500;
+}
+.badge-senior { background: rgba(41,217,164,.12); color: var(--accent2); border: 1px solid rgba(41,217,164,.2); }
+.badge-junior { background: rgba(79,156,249,.12); color: var(--accent); border: 1px solid rgba(79,156,249,.2); }
+.badge-warn { background: rgba(249,124,79,.12); color: var(--accent3); border: 1px solid rgba(249,124,79,.2); margin-left:4px; font-size: 9px; }
+.id-cell { font-family: var(--font-mono); color: var(--text3); font-size: 12px; }
+.salary-cell { font-family: var(--font-mono); color: var(--accent2); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.table-scroll { max-height: 320px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="logo-text">CRM Employee Dashboard</div>
+      <div class="logo-sub">2026 · Africa &amp; Global Operations</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="filter-group">
+      <label>Dept</label>
+      <select id="f-dept" onchange="render()"><option value="">All departments</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Country</label>
+      <select id="f-country" onchange="render()"><option value="">All countries</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Level</label>
+      <select id="f-sen" onchange="render()"><option value="">All levels</option></select>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div>Live</div>
+  </div>
+</header>
+
+<main id="main-grid">
+  <div class="metric" id="m1"></div>
+  <div class="metric green" id="m2"></div>
+  <div class="metric orange" id="m3"></div>
+  <div class="metric purple" id="m4"></div>
+
+  <div class="chart-card span2" style="animation-delay:.25s">
+    <div class="chart-title">Salary by department</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-dept"></canvas></div>
+  </div>
+  <div class="chart-card span2" style="animation-delay:.3s">
+    <div class="chart-title">Performance score</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-perf"></canvas></div>
+  </div>
+
+  <div class="chart-card span2" style="animation-delay:.35s">
+    <div class="chart-title">Headcount by country</div>
+    <div class="chart-wrap" style="height:180px"><canvas id="c-country"></canvas></div>
+  </div>
+  <div class="chart-card" style="animation-delay:.38s">
+    <div class="chart-title">Top skills</div>
+    <div id="skills-list" style="padding-top:4px"></div>
+  </div>
+  <div class="chart-card" style="animation-delay:.4s">
+    <div class="chart-title">Seniority mix</div>
+    <div class="chart-wrap" style="height:180px"><canvas id="c-sen"></canvas></div>
+  </div>
+
+  <div class="chart-card span4" style="animation-delay:.45s">
+    <div class="chart-title">Employee directory</div>
+    <div class="table-scroll">
+      <table class="emp-table">
+        <thead><tr>
+          <th>ID</th><th>Name</th><th>Title</th><th>Department</th>
+          <th>Country</th><th>Salary</th><th>Perf</th><th>Status</th><th>Level</th>
+        </tr></thead>
+        <tbody id="emp-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+const ALL = [
+  {id:'E001',name:'John Kamau',title:'Senior Data Analyst',dept:'Data',country:'Kenya',salary:4200,exp:3.8,status:'Junior',statusOk:'Senior',perf:77.7,seniority:'Individual Contributor',skills:['Kafka','DataBricks','Spark','Python','GCP']},
+  {id:'E002',name:'Sarah Ahmed',title:'Sales Manager',dept:'Sales',country:'UAE',salary:5000,exp:4,status:'Junior',statusOk:'Senior',perf:80.7,seniority:'Manager',skills:['Power BI','GCP','Airflow','Hadoop','R']},
+  {id:'E003',name:'Peter Mensah',title:'Junior HR Officer',dept:'Human Resources',country:'Ghana',salary:2200,exp:3,status:'Junior',statusOk:'Junior',perf:61.2,seniority:'Junior',skills:['Azure','Java','SQL','DataBricks']},
+  {id:'E004',name:'Amina Yusuf',title:'Marketing Lead',dept:'Marketing',country:'Nigeria',salary:4600,exp:5,status:'Junior',statusOk:'Senior',perf:100.9,seniority:'Lead',skills:['Kafka','DataBricks','Spark','Python','GCP']},
+  {id:'E005',name:'David Chen',title:'Cloud Engineer',dept:'IT',country:'China',salary:4800,exp:3,status:'Junior',statusOk:'Junior',perf:60.5,seniority:'Individual Contributor',skills:['DataBricks','Hadoop','Java']},
+  {id:'E006',name:'Mary Ndlovu',title:'Customer Support Executive',dept:'Support',country:'Zimbabwe',salary:2000,exp:2,status:'Junior',statusOk:'Junior',perf:41.1,seniority:'Individual Contributor',skills:['Snowflake','Airflow','DataBricks']},
+  {id:'E007',name:'Robert Brown',title:'Finance Director',dept:'Finance',country:'USA',salary:7500,exp:6,status:'Senior',statusOk:'Senior',perf:121.4,seniority:'Director',skills:['Azure','Java','SQL','DataBricks']},
+  {id:'E008',name:'Fatima Ali',title:'VP of Sales',dept:'Sales',country:'UAE',salary:9800,exp:7,status:'Senior',statusOk:'Senior',perf:140,seniority:'VP',skills:['Snowflake','Airflow','DataBricks']},
+  {id:'E009',name:'Joseph Otieno',title:'Operations Supervisor',dept:'Operations',country:'Kenya',salary:3900,exp:4,status:'Junior',statusOk:'Junior',perf:81.6,seniority:'Individual Contributor',skills:['Scala','Azure','R','Kafka']},
+  {id:'E010',name:'Grace Wambui',title:'Software Engineer',dept:'Engineering',country:'Kenya',salary:4100,exp:3,status:'Junior',statusOk:'Junior',perf:60.5,seniority:'Individual Contributor',skills:['Power BI','Hadoop','R','Scala','SQL']},
+  {id:'E011',name:'Daniel Okafor',title:'Finance Director',dept:'Finance',country:'Nigeria',salary:5300,exp:5,status:'Junior',statusOk:'Senior',perf:80.7,seniority:'Director',skills:['DataBricks','Hadoop','Java','R']},
+  {id:'E012',name:'Linda Martinez',title:'People & Culture Manager',dept:'People',country:'Spain',salary:6000,exp:6,status:'Senior',statusOk:'Senior',perf:120.5,seniority:'Manager',skills:['Excel','Power BI','Airflow','SQL']},
+  {id:'E013',name:'Ahmed Hassan',title:'Data Science Intern',dept:'Data',country:'Egypt',salary:1500,exp:1,status:'Junior',statusOk:'Junior',perf:40.7,seniority:'Junior',skills:['Python','Spark','R']},
+  {id:'E014',name:'Jane Smith',title:'Growth Marketing Specialist',dept:'Marketing',country:'UK',salary:4300,exp:3,status:'Junior',statusOk:'Junior',perf:61.3,seniority:'Individual Contributor',skills:['Power BI','GCP','Airflow','Hadoop','R']},
+  {id:'E015',name:'Brian Ouma',title:'Junior Software Developer',dept:'Engineering',country:'Kenya',salary:2800,exp:2,status:'Junior',statusOk:'Junior',perf:38.0,seniority:'Junior',skills:['DataBricks','Hadoop','Scala']},
+  {id:'E016',name:'Innocent Oga',title:'Junior HR Officer',dept:'Support',country:'Kenya',salary:2800,exp:2,status:'Junior',statusOk:'Junior',perf:70.5,seniority:'Junior',skills:['DataBricks','Snowflake','Excel']},
+  {id:'E017',name:'Emma Ochi',title:'Junior Software Developer',dept:'Engineering',country:'Uganda',salary:2800,exp:2,status:'Junior',statusOk:'Junior',perf:25.8,seniority:'Junior',skills:['DataBricks','Hadoop','Scala']},
+  {id:'E018',name:'Mark Ian',title:'Finance Director',dept:'IT',country:'Kenya',salary:6599,exp:5,status:'Junior',statusOk:'Senior',perf:60.3,seniority:'Director',skills:['Kafka','DataBricks','Snowflake','GCP']},
+  {id:'E019',name:'Jane Samiai',title:'Junior Software Developer',dept:'Support',country:'Uganda',salary:2800,exp:2,status:'Junior',statusOk:'Junior',perf:72.0,seniority:'Junior',skills:['Snowflake','R','Scala']},
+  {id:'E020',name:'Rihanna Weks',title:'Finance Director',dept:'Finance',country:'Uganda',salary:6000,exp:5,status:'Junior',statusOk:'Senior',perf:80.5,seniority:'Director',skills:['DataBricks','Java','SQL','Kafka']},
+];
+
+const DEPT_COLORS = {
+  'Sales':'#4f9cf9','Finance':'#29d9a4','People':'#b06cf9','IT':'#f97c4f',
+  'Marketing':'#f9d44f','Operations':'#4fd9f9','Engineering':'#f94f7c',
+  'Data':'#9cf94f','Support':'#f94fc5','Human Resources':'#4ff9b0'
+};
+
+function unique(key){ return [...new Set(ALL.map(d=>d[key]))].sort(); }
+
+const fDept = document.getElementById('f-dept');
+const fCountry = document.getElementById('f-country');
+const fSen = document.getElementById('f-sen');
+
+unique('dept').forEach(v=>{const o=document.createElement('option');o.value=o.textContent=v;fDept.appendChild(o);});
+unique('country').forEach(v=>{const o=document.createElement('option');o.value=o.textContent=v;fCountry.appendChild(o);});
+unique('seniority').forEach(v=>{const o=document.createElement('option');o.value=o.textContent=v;fSen.appendChild(o);});
+
+let charts = {};
+
+function filtered(){
+  const d=fDept.value, c=fCountry.value, s=fSen.value;
+  return ALL.filter(e=>(!d||e.dept===d)&&(!c||e.country===c)&&(!s||e.seniority===s));
+}
+
+function groupAvg(data,key,val){
+  const m={};
+  data.forEach(e=>{if(!m[e[key]])m[e[key]]={s:0,n:0};m[e[key]].s+=e[val];m[e[key]].n++;});
+  return Object.entries(m).map(([k,v])=>({label:k,val:Math.round(v.s/v.n)})).sort((a,b)=>b.val-a.val);
+}
+function groupCount(data,key){
+  const m={};
+  data.forEach(e=>{m[e[key]]=(m[e[key]]||0)+1;});
+  return Object.entries(m).map(([k,v])=>({label:k,val:v})).sort((a,b)=>b.val-a.val);
+}
+
+const chartOpts = (horizontal=false, fmt=null) => ({
+  responsive:true, maintainAspectRatio:false,
+  indexAxis: horizontal?'y':'x',
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt?fmt(c.raw):c.raw},
+    backgroundColor:'#1a2035',titleColor:'#7b8498',bodyColor:'#e8ecf4',borderColor:'rgba(255,255,255,.08)',borderWidth:1,padding:10}},
+  scales:{
+    x:{ticks:{color:'#4a5168',font:{size:11,family:'DM Mono'}},grid:{color:'rgba(255,255,255,.04)'}},
+    y:{ticks:{color:'#4a5168',font:{size:11,family:'DM Mono'},callback:horizontal&&fmt?fmt:undefined},grid:{color:'rgba(255,255,255,.04)'},beginAtZero:true}
+  }
+});
+
+function mkBar(id, labels, data, colors, horizontal=false, fmt=null){
+  if(charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels, datasets:[{data, backgroundColor:colors, borderRadius:5, borderWidth:0, hoverBackgroundColor:colors.map(c=>c+'cc')}]},
+    options: chartOpts(horizontal, fmt)
+  });
+}
+
+function render(){
+  const data = filtered();
+  const n = data.length;
+  const avgSal = n ? Math.round(data.reduce((s,e)=>s+e.salary,0)/n) : 0;
+  const avgPerf = n ? (data.reduce((s,e)=>s+e.perf,0)/n).toFixed(1) : 0;
+  const seniorN = data.filter(e=>e.statusOk==='Senior').length;
+
+  document.getElementById('m1').innerHTML = `<div class="metric-label">Employees shown</div><div class="metric-val">${n}</div><div class="metric-sub">of 20 total records</div>`;
+  document.getElementById('m2').innerHTML = `<div class="metric-label">Avg salary / month</div><div class="metric-val">$${avgSal.toLocaleString()}</div><div class="metric-sub">USD · filtered set</div>`;
+  document.getElementById('m3').innerHTML = `<div class="metric-label">Avg performance</div><div class="metric-val">${avgPerf}</div><div class="metric-sub">internal KPI score</div>`;
+  document.getElementById('m4').innerHTML = `<div class="metric-label">Senior employees</div><div class="metric-val">${seniorN}</div><div class="metric-sub">${n?Math.round(seniorN/n*100):0}% of shown</div>`;
+
+  const deptSal = groupAvg(data,'dept','salary');
+  mkBar('c-dept', deptSal.map(d=>d.label), deptSal.map(d=>d.val), deptSal.map(d=>DEPT_COLORS[d.label]||'#4f9cf9'), true, v=>'$'+Math.round(v).toLocaleString());
+
+  const deptPerf = groupAvg(data,'dept','perf');
+  mkBar('c-perf', deptPerf.map(d=>d.label), deptPerf.map(d=>d.val), deptPerf.map(d=>DEPT_COLORS[d.label]||'#29d9a4'), true);
+
+  const cc = groupCount(data,'country');
+  mkBar('c-country', cc.map(d=>d.label), cc.map(d=>d.val), cc.map(()=>'#4f9cf9'));
+
+  const senMap={};
+  data.forEach(e=>{senMap[e.seniority]=(senMap[e.seniority]||0)+1;});
+  if(charts['c-sen']) charts['c-sen'].destroy();
+  const senLabels=Object.keys(senMap), senVals=Object.values(senMap);
+  const senColors=['#4f9cf9','#29d9a4','#b06cf9','#f97c4f','#f9d44f','#f94f7c'];
+  charts['c-sen'] = new Chart(document.getElementById('c-sen'),{
+    type:'doughnut',
+    data:{labels:senLabels,datasets:[{data:senVals,backgroundColor:senColors.slice(0,senLabels.length),borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{display:true,position:'right',labels:{color:'#7b8498',font:{size:11,family:'DM Mono'},boxWidth:10,padding:12}},
+        tooltip:{backgroundColor:'#1a2035',titleColor:'#7b8498',bodyColor:'#e8ecf4',borderColor:'rgba(255,255,255,.08)',borderWidth:1,padding:10}}}
+  });
+
+  const skillMap={};
+  data.forEach(e=>(e.skills||[]).forEach(s=>{skillMap[s]=(skillMap[s]||0)+1;}));
+  const topSkills=Object.entries(skillMap).sort((a,b)=>b[1]-a[1]).slice(0,9);
+  const maxSk=topSkills[0]?.[1]||1;
+  document.getElementById('skills-list').innerHTML=topSkills.map(([s,n],i)=>`
+    <div class="skill-row">
+      <span class="skill-name">${s}</span>
+      <div class="skill-track"><div class="skill-fill" style="width:${Math.round(n/maxSk*100)}%;background:${senColors[i%senColors.length]}"></div></div>
+      <span class="skill-count">${n}</span>
+    </div>`).join('');
+
+  document.getElementById('emp-body').innerHTML=data.map(e=>{
+    const mis=e.status!==e.statusOk;
+    return `<tr>
+      <td class="id-cell">${e.id}</td>
+      <td>${e.name}</td>
+      <td style="color:#7b8498;font-size:12px">${e.title}</td>
+      <td style="font-size:12px">${e.dept}</td>
+      <td style="font-size:12px">${e.country}</td>
+      <td class="salary-cell">$${e.salary.toLocaleString()}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:${e.perf>=100?'#f9d44f':e.perf>=70?'#29d9a4':'#7b8498'}">${e.perf.toFixed(1)}</td>
+      <td><span class="badge ${e.statusOk==='Senior'?'badge-senior':'badge-junior'}">${e.statusOk}</span>${mis?'<span class="badge badge-warn">fixed</span>':''}</td>
+      <td style="font-size:11px;color:#7b8498;font-family:'DM Mono',monospace">${e.seniority}</td>
+    </tr>`;
+  }).join('');
+}
+
+render();
+</script>
+</body>
+</html>
