@@ -1,8 +1,10 @@
-# 📊 CRM Employee Dataset 2026
+ 📊 CRM Employee Dataset 2026
 
 A cleaned and structured HR/CRM employee dataset covering 20 employees across 11 countries and 10 departments. Prepared for analytics, reporting, and data pipeline projects.
 
 ---
+
+[![Image 1](chart4_seniority_mix.png)](chart2_performance_by_dept.png) [![Image 2](chart2_performance_by_dept.png)](link2) [![Image 3](img3.png)](link3)
 
 ## 📁 Repository Structure
 
