@@ -4,7 +4,7 @@ A cleaned and structured HR/CRM employee dataset covering 20 employees across 11
 
 ---
 
-[![Image 1](chart4_seniority_mix.png)]
+![Image 1](chart4_seniority_mix.png)
 
 ## 📁 Repository Structure
 
@@ -12,7 +12,7 @@ A cleaned and structured HR/CRM employee dataset covering 20 employees across 11
 crm-dataset-2026/
 ├── README.md
 ├── CRM_2026_Cleaned.xlsx        # Main cleaned workbook (4 sheets)
-└── data/
+└── data/ Image.png
     └── CRM-DATASET_2026_Analysis_PIVOT_TABLES.xlsx  # Original source file
 ```
 
@@ -145,4 +145,4 @@ Before using this dataset in production or analysis pipelines, address the follo
 
 ## 📄 License
 
-This dataset is for internal use only. Do not distribute externally without authorization.
+This dataset is for internal use only. Do not distribute externally without authorization. Made by Myself.
