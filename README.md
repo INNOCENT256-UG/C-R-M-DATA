@@ -2,10 +2,6 @@
 
 A cleaned and structured HR/CRM employee dataset covering 20 employees across 11 countries and 10 departments. Prepared for analytics, reporting, and data pipeline projects.
 
----
-
-![Image 1](chart4_seniority_mix.png)
-
 ## 📁 Repository Structure
 
 ```
